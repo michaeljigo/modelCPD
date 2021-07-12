@@ -1,0 +1,21 @@
+% A short template of using the staircase
+
+%% Initialize
+stairParams.whichStair = 1;
+stairParams.alphaRange = 0.5:0.5:45;
+stairParams.fitBeta = 2;
+stairParams.fitLamba = 0.01;
+stairParams.fitGamma = 0.5;
+stairParams.threshPerformance = 0.75;
+stairParams.PF = 'arbWeibull';
+
+myStair = usePalamedesStaircase(stairParams);
+
+%% Run experiment
+
+nTrials = 10;
+for trial = 1:nTrials
+    % show the threshold estimate to the subject
+    targetTilt = myStair.xCurrent;
+    % for example purposes assume that dispGabor
+end
