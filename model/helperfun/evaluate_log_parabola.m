@@ -23,7 +23,7 @@ amp = 10.^(params.amp_max+(params.amp_slope*params.ecc));
 peak_freq = 2.^(log2(2^params.freq_max-0.5)+(params.freq_slope*params.ecc))+0.5; % minimum SF fixed at 0.5
 
 % bandwidth
-bw = (params.bw_max-0.5)*exp(params.bw_slope.*params.ecc)+0.5; % minimum bandwidth fixed at 0.5 
+bw = (params.bw_max)*exp(params.bw_slope.*params.ecc);
 
 if ~params.compute_sensitivity
    weights = [];
