@@ -19,8 +19,8 @@ function [sf_gain contrast_gain] = generate_contrast_sf_gain(channel,stimdrive,i
 
 %% Generate weights at each pixel of eccentricity matrix
 % evaluate SF gain at each eccentricity spanned by image (log parabola); maximum of function always 1
-sf_gain = evaluate_log_parabola('amp_max',0,'amp_slope',0,'freq_max',stimdrive.freq_max,'freq_slope',stimdrive.freq_slope,'bw_max',stimdrive.bw_max,'bw_slope',stimdrive.bw_slope,...
-   'ecc',ecc_im,'channel_freq',channel.freq,'channel_ori',channel.ori);
+sf_gain = evaluate_log_parabola('amp_max',0,'amp_slope',0,'freq_max',stimdrive.freq_max,'freq_slope',stimdrive.freq_slope,'freq_min',stimdrive.freq_min,'bw_max',stimdrive.bw_max,...
+   'bw_slope',stimdrive.bw_slope,'ecc',ecc_im,'channel_freq',channel.freq,'channel_ori',channel.ori);
 
 % evaluate contrast gain at each eccentricity spanned by image
 [~, contrast_gain] = evaluate_log_parabola('amp_max',stimdrive.cg_max,'amp_slope',stimdrive.cg_slope,'ecc',ecc_im,'channel_freq',channel.freq,'channel_ori',channel.ori);

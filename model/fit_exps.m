@@ -1,5 +1,34 @@
-% Purpose:  This function will allow one to fit the model simultaneously to several experiments.
+% Purpose:  This function will fit the model simultaneously to several experiments.
 %           Fits will be configured in a manner identical to that described in the manuscript.
+%
+%           Different combinations of datasets (neutral, involuntary or voluntary), attention profile variants (narrow, broad, or space-only)
+%           or model variants (main model, without divisive normalization, without spatial summation) can be fit by inputting different options:
+%           
+%           For example, to fit the involuntary attention experiments with the space-only attention profile and the main model:
+%           out = fit_exps('attn_type','involuntary','sf_profile','space_only','model_variant','main_model');
+%
+%           A detailed list of the possible inputs is below:
+%           sf_profile           
+%              narrow            narrow SF profile
+%              broad             broad SF profile
+%              space_only        spatial spread only, with uniform SF gain
+%           
+%           model_variant
+%              main_model        full model
+%              minus_sf          cross-frequency suppression removed
+%              minus_ori         cross-orientation suppression removed
+%              minus_space       surround suppression removed
+%              minus_context     all contextual modulation removed
+%              minus_sum         spatial summation removed
+%
+%           attn_type
+%              neutral           only the neutral conditions of all 10 experiments will be fit
+%              involuntary       neutral + peripheral cue conditions from 6 involuntary attention experiments will be fit
+%              voluntary         neutral + central cue conditions from 4 voluntary attention experiments will be fit
+%
+%           display_fit
+%              1                 display fit
+%              0                 don't display
 % 
 % By:       Michael Jigo
 
@@ -9,7 +38,7 @@ addpath(genpath('../texture'));
 addpath(genpath('~/apps'));
 
 %% Set default parameters
-in = {'sf_profile' ...   % 'narrow' or 'broad' or 'space_only'
+in = {'sf_profile' ...     % 'narrow' or 'broad' or 'space_only'
    'model_variant' ...     % 'main_model', 'minus_sf', 'minus_ori', 'minus_space', 'minus_context', 'minus_sum'
    'attn_type' ...         % 'neutral' or 'involuntary' or 'voluntary'
    'display_fit'};         % 1=display fits; 0=don't display fits
@@ -147,6 +176,7 @@ end
 %% Load datasetes and images
 for e = 1:numel(p.exp_list)
    tmp = load(sprintf('../data/behavior/%s.mat',p.exp_list{e}));
+   if isfield(tmp.data,'model_dprime'), tmp.data = rmfield(tmp.data,'model_dprime'); end
    data(e) = tmp.data;
 
    if strcmp(p.attn_type,'neutral')

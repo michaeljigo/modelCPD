@@ -15,6 +15,37 @@ if nargin==1
    for e = 1:numel(p.exp_list)
       [stimdrive(e) supdrive(e) attn(e)] = init_parameters('sf_profile',p.sf_profile); 
 
+      % set baseline of attention modulation to 1
+         attn(e).attn_baseline            = 1;
+         % get rid of suppressive surround
+         attn(e).attn_sup_amp             = nan; 
+         attn(e).attn_sup_spread          = nan;
+         attn(e).bnd.attn_baseline        = [1 1];
+         attn(e).bnd.attn_sup_amp         = [nan nan];
+         attn(e).bnd.attn_sup_spread      = [nan nan];
+         attn(e).plaus_bnd                = attn(e).bnd;
+
+      % fix minimum SF to 0.5 cpd
+         stimdrive(e).freq_min            = 0.5;
+         stimdrive(e).bnd.freq_min        = [0.5 0.5];
+         stimdrive(e).plaus_bnd.freq_min  = [0.5 0.5];
+
+      % adjust parameter bounds based on the simulation being performed
+         if strcmp(p.sf_profile,'space_only')
+            % adjust bounds so that only the spread of attention can vary while SF gain is uniform
+            attn(e).attn_freq_max         = 1e2;
+            attn(e).attn_freq_slope       = 0;
+            attn(e).attn_bw               = 1e2;
+            attn(e).bnd.attn_freq_max     = [1e2 1e2];
+            attn(e).bnd.attn_freq_slope   = [0 0];
+            attn(e).bnd.attn_bw           = [1e2 1e2];
+            attn(e).plaus_bnd             = attn.bnd;
+         else
+            % fix the spread of attention at 4 degrees
+            attn(e).attn_spread           = 4;
+            attn(e).bnd.attn_spread       = [4 4];
+         end
+
       % set repeated parameters to NaN
       for param = p.param_list
          param = char(param);

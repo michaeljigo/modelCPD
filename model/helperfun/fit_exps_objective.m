@@ -38,7 +38,7 @@ end
 
 
 %%%% Compute model response to images
-parfor exp_num = 1:numel(data)
+parfor exp_num = 1:numel(data) % parfor
 
    %% Generate parameters
    % extract parameters for this experiment
@@ -55,8 +55,6 @@ parfor exp_num = 1:numel(data)
    for c = 1:size(data(exp_num).dprime,1)
       % evaluate model
       use_attn = c-1;
-      %targresp = run_model(data(exp_num).stim.targ,'energy',energy.targ(exp_num).energy,'ecc',data(exp_num).ecc,'stimdrive',current_stimdrive,'supdrive',current_supdrive,'attn',current_attn,'use_attn',use_attn,'gain_profile',p.gain_profile,'model_variant',p.model_variant);
-      %notargresp = run_model(data(exp_num).stim.notarg,'energy',energy.notarg(exp_num).energy,'ecc',data(exp_num).ecc,'stimdrive',current_stimdrive,'supdrive',current_supdrive,'attn',current_attn,'use_attn',use_attn,'gain_profile',p.gain_profile,'model_variant',p.model_variant);
       targresp = imAmodel(data(exp_num).stim.targ,'energy',energy.targ(exp_num).energy,'ecc',data(exp_num).ecc,'stimdrive',current_stimdrive,'supdrive',current_supdrive,'attn',current_attn,'use_attn',use_attn,'sf_profile',p.sf_profile,'model_variant',p.model_variant);
       notargresp = imAmodel(data(exp_num).stim.notarg,'energy',energy.notarg(exp_num).energy,'ecc',data(exp_num).ecc,'stimdrive',current_stimdrive,'supdrive',current_supdrive,'attn',current_attn,'use_attn',use_attn,'sf_profile',p.sf_profile,'model_variant',p.model_variant);
       

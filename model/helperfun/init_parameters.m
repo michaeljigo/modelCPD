@@ -25,6 +25,7 @@ in = {'cg_max'
       'cg_slope'
       'freq_max' 
       'freq_slope'
+      'freq_min'
       'bw_max' 
       'bw_slope'
       'sup_space'
@@ -56,9 +57,9 @@ start_params = parseOptionalInputs(in,val,varargin);
 % freq_slope   shift in SF preference with eccentricity
 % bw_max       SF bandwidth
 % bw_slope     change in SF bandwidth with eccentricity (fixed at 0)
-names      = { 'cg_max'    'cg_slope'       'freq_max'  'freq_slope'   'bw_max'    'bw_slope'};
-bnds       = { [1 4]        [-1 0]          [1 6]        [-1 0]     [0.5 4]     [0 0]};
-plaus_bnds = { [1 3]        [-0.3 -0.1]        [2 3]        [-0.7 -0.6]    [1 2]       [0 0]};
+names      = { 'cg_max'    'cg_slope'       'freq_max'   'freq_slope'   'freq_min'     'bw_max'    'bw_slope'};
+bnds       = { [1 4]        [-1 0]           [1 6]        [-1 0]        [0 0.5]        [0.5 4]     [0 0]};
+plaus_bnds = { [1 3]        [-0.3 -0.1]      [2 3]        [-0.7 -0.6]   [0.25 0.5]     [1 2]       [0 0]};
 
 
 if isempty(start_params.stimdrive)
@@ -92,9 +93,9 @@ stimdrive.param_names = names;
 % sup_space    surround suppression pool width; value is a scalar defining how width relates to channel SF preference
 % sup_ori      cross-orientation suppression pool; value is in degrees
 % sup_freq     cross-frequency suppression pool
-names = {'sup_space' 'sup_ori' 'sup_freq'};
-bnds = {[4 4] [180 180] [2 2]};
-plaus_bnds = {[4 4] [180 180] [2 2]};
+names =        {'sup_space'   'sup_ori'   'sup_freq'};
+bnds =         {[4 4]         [180 180]   [2 2]};
+plaus_bnds =   {[4 4]         [180 180]   [2 2]};
 
 if isempty(start_params.supdrive)
    % put parameters into supdrive structure
@@ -124,7 +125,6 @@ supdrive.param_names = names;
 
 
 %% Attention parameters
-%%%%%%%%%%%%%%%%%%%%%% MAKE THESE HAVE FLEXIBLE BOUNDS BY ALLOWING A STRUCTURE INPUT
 % attn_freq_max      maximum attentional SF preference (at fovea)
 % attn_freq_slope    change in attentional SF preference with eccentricity (in octaves)
 % attn_bw            attention SF bandwidth (in octaves)
@@ -135,46 +135,9 @@ supdrive.param_names = names;
 % attn_sup_amp       scalar of suppressive surround amplitude (difference-of-Gaussians only)
 % attn_sup_spread    scalar of suppressive surround spread (difference-of-Gaussians only)
 
-%%if strcmp(start_params.sf_profile,'space_only')
-   %spread_bnds = [0.5 10];
-   %spread_plausbnds = [2 6];
-
-   %freq_max_bnds = [1e2 1e2];
-   %freq_max_plausbnds = [1e2 1e2];
-
-   %freq_slope_bnds = [1e2 1e2];
-   %freq_slope_plausbnds = [1e2 1e2];
-   
-   %freq_bw_bnds = [1e2 1e2];
-   %freq_bw_plausbnds = [1e2 1e2];
-%else
-   %spread_bnds = [4 4];
-   %spread_plausbnds = [4 4];
-   
-   %freq_max_bnds = [0.5 4];
-   %freq_max_plausbnds = [1 1.5];
-   
-   %freq_slope_bnds = [-0.5 0];
-   %freq_slope_plausbnds = [-0.2 0];
-   
-   %freq_bw_bnds = [1 5];
-   %freq_bw_plausbnds = [1 2];
-%end
-%amp_bnds = [4 20];
-%amp_plausbnds = [4 6];
-
-
-%%%% REMOVE THESE AFTER MAKING BOUNDS ABLE TO BE CHANGED
-%spread_bnds = [0.5 4];
-%spread_plausbnds = [2 3];
-
-%baseline_bnds = [1 1];
-%baseline_plausbnds = [1 1];
-
-
-names =      {'attn_freq_max'    'attn_freq_slope'     'attn_bw'         'attn_amp_max'   'attn_amp_slope'  'attn_spread'     'attn_baseline'   'attn_sup_amp'   'attn_sup_spread'};
-bnds =       {[1 5]              [-1 0]                [1 6]             [0.1 20]         [0 0]             [1 8]             [0.1 1]           [0 0.95]          [1 32]};
-plaus_bnds = {[2 3]              [-0.2 -0.04]          [2 3]             [0.5 3]          [0 0]             [3 4]             [0.5 1]           [0.25 0.5]        [4 8]};
+names =      {'attn_freq_max'    'attn_freq_slope'     'attn_bw'     'attn_amp_max'   'attn_amp_slope'   'attn_spread'     'attn_baseline'      'attn_sup_amp'   'attn_sup_spread'};
+bnds =       {[1 5]              [-1 0]                [1 6]         [1 20]            [0 0]             [1 8]             [0.1 1]              [0 0.95]          [1 8]};
+plaus_bnds = {[2 3]              [-0.2 -0.04]          [2 3]         [1 3]             [0 0]             [3 4]             [0.5 1]              [0.25 0.5]        [2 4]};
 
 
 % put parameters into attn structure

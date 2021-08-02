@@ -1,7 +1,7 @@
 % Purpose:  Reconstruct an image after steerable pyramid decomposition.
 %           Spatial frequencies and orientations can be selectively included in the reconstruction.
 
-function recon = reconstruct_image(im,nori,freqBW,includeFreq,pxPerDeg)
+function [recon, nominalSF] = reconstruct_image(im,nori,freqBW,includeFreq,pxPerDeg)
 
 % decompose
    nfreq = floor((log2(min(size(im)))-2)/freqBW);
@@ -15,10 +15,16 @@ function recon = reconstruct_image(im,nori,freqBW,includeFreq,pxPerDeg)
    max_freq       = log2(pxPerDeg)-(1+freq_adjust); 
    channelFreq   = 2.^(max_freq-(0:freqBW:100));
    nominalSF      = round(channelFreq(1:nfreq)*10)./10;
-
+  
+% break function if includeFreq is empty
+    if isempty(includeFreq)
+        recon = nominalSF;
+        return
+    end
 
 % reconstruct (based on reconQuadSteerPyr by David J. Heeger)
    recon = reconstruct(pyr,pyrFRs,'real',nominalSF,includeFreq);
+   %recon = reconstruct(pyr,pyrFRs,'imaginary',nominalSF,includeFreq);
 
 function result = reconstruct(pyr,pyrFRs,whichPart,nominalSF,includeFreq)
 % reconSteerBands: reconstruct an image from the subband transform.
@@ -64,7 +70,3 @@ end
 %result = result + real(ifft2(fftshift(hiFreqBand.*conj(hiFR))));
 %loFreqBand = fftshift(fft2(lo));
 %result = result + real(ifft2(fftshift(loFreqBand.*conj(loFR))));
-
-
-
-

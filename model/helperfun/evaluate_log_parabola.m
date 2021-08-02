@@ -10,8 +10,8 @@ function [weights amp peak_freq bw] = evaluate_log_parabola(varargin)
 %% Set log-parabola parameters
 % compute_sensitivity=1, evaluate the CSF
 % compute_sensitivity=0, just output the parameters
-in = {'amp_max' 'amp_slope' 'freq_max' 'freq_slope' 'bw_max' 'bw_slope' 'ecc' 'freq' 'display_function' 'channel_freq' 'channel_ori' 'compute_sensitivity'};
-val = {2 -0.0483 2 -0.128 2 0 0:2:10 2 0 [] [] 1};
+in = {'amp_max' 'amp_slope' 'freq_max' 'freq_slope' 'freq_min' 'bw_max' 'bw_slope' 'ecc' 'freq' 'display_function' 'channel_freq' 'channel_ori' 'compute_sensitivity'};
+val = {2 -0.0483 2 -0.128 0.5 2 0 0:2:10 2 0 [] [] 1};
 params = parseOptionalInputs(in,val,varargin);
 
 
@@ -20,7 +20,7 @@ params = parseOptionalInputs(in,val,varargin);
 amp = 10.^(params.amp_max+(params.amp_slope*params.ecc));
 
 % peak SF 
-peak_freq = 2.^(log2(2^params.freq_max-0.5)+(params.freq_slope*params.ecc))+0.5; % minimum SF fixed at 0.5
+peak_freq = 2.^(log2(2^params.freq_max-params.freq_min)+(params.freq_slope*params.ecc))+params.freq_min;
 
 % bandwidth
 bw = (params.bw_max)*exp(params.bw_slope.*params.ecc);

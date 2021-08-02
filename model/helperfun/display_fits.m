@@ -6,14 +6,14 @@
 function display_fits(varargin)
 
 %% Set default parameters
-in = {'sf_profile' ...   % 'narrow' or 'broad' or 'space_only'
+in = {'sf_profile' ...     % 'narrow' or 'broad' or 'space_only'
    'model_variant' ...     % 'main_model', 'minus_sf', 'minus_ori', 'minus_space', 'minus_context', 'minus_sum'
    'attn_type' ...         % 'neutral' or 'involuntary' or 'voluntary'
    'display_fit'};         % 1=display fits; 0=don't display fits
 
 val = {'narrow' ...        % sf_profile
    'main_model' ...        % model_variant
-   'voluntary' ...       % attn_type
+   'voluntary' ...         % attn_type
    1};                     % display_fit
 
 p = parseOptionalInputs(in,val,varargin); 
