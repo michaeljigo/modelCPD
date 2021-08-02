@@ -23,6 +23,16 @@ To generate population responses to input images, "imAmodel" calls "compute_mode
 computes the model's response to the image.
 
 
+
+-----------------------------------------
+------------ Model fitting --------------
+-----------------------------------------
+
+To fit the model to the behavioral data, use the code located in the "model" directory, named "fit_exps.m".
+Detailed information about the input parameters for the function can be found in the function.
+
+
+
 -----------------------------------------
 ---------- Directory structure ----------
 -----------------------------------------
