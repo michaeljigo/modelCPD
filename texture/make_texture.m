@@ -63,7 +63,7 @@ val = {32 ...                    % px_per_deg
       45 ...                     % ori_bkgrnd
       0 ...                      % ori_bw
       0 ...                      % targ_ecc
-      100 ...                     % init_lines
+      100 ...                    % init_lines
       'white'};                  % bkgrnd_color                   
       
 texture_params = parseOptionalInputs(in,val,varargin);
@@ -218,6 +218,9 @@ t = targ_tex;
 switch texture_params.bkgrnd_color
    case 'white'
       t(t>=1-1e-3) = 1;
+      orgT = t;
+      t(orgT==1) = 0;
+      t(orgT==0) = 1;
    case 'gray'
       t(t>=1-1e-3) = 1;
       t(t<=1e-3) = 0.5;
@@ -230,6 +233,9 @@ n = notarg_tex;
 switch texture_params.bkgrnd_color
    case 'white'
       n(n>=1-1e-3) = 1;
+      orgN = n;
+      n(orgN==1) = 0;
+      n(orgN==0) = 1;
    case 'gray'
       n(n>=1-1e-3) = 1;
       n(n<=1e-3) = 0.5;

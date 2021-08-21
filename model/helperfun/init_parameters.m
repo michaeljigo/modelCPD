@@ -58,8 +58,8 @@ start_params = parseOptionalInputs(in,val,varargin);
 % bw_max       SF bandwidth
 % bw_slope     change in SF bandwidth with eccentricity (fixed at 0)
 names      = { 'cg_max'    'cg_slope'       'freq_max'   'freq_slope'   'freq_min'     'bw_max'    'bw_slope'};
-bnds       = { [1 4]        [-1 0]           [1 6]        [-1 0]        [0 0.5]        [0.5 4]     [0 0]};
-plaus_bnds = { [1 3]        [-0.3 -0.1]      [2 3]        [-0.7 -0.6]   [0.25 0.5]     [1 2]       [0 0]};
+bnds       = { [1 3]        [-1 -0.05]       [0 3.5]      [-1 0]        [0.5 0.5]      [1 2]       [0 0]};
+plaus_bnds = { [1 2]        [-0.3 -0.1]      [2 3]        [-0.7 -0.6]   [0.5 0.5]      [1 2]       [0 0]};
 
 
 if isempty(start_params.stimdrive)
@@ -136,8 +136,8 @@ supdrive.param_names = names;
 % attn_sup_spread    scalar of suppressive surround spread (difference-of-Gaussians only)
 
 names =      {'attn_freq_max'    'attn_freq_slope'     'attn_bw'     'attn_amp_max'   'attn_amp_slope'   'attn_spread'     'attn_baseline'      'attn_sup_amp'   'attn_sup_spread'};
-bnds =       {[1 5]              [-1 0]                [1 6]         [1 20]            [0 0]             [1 8]             [0.1 1]              [0 0.95]          [1 8]};
-plaus_bnds = {[2 3]              [-0.2 -0.04]          [2 3]         [1 3]             [0 0]             [3 4]             [0.5 1]              [0.25 0.5]        [2 4]};
+bnds =       {[1 4]              [-1 -0.1]            [1 3]         [1 20]            [0 0]             [1 5]             [0.1 1]              [0.1 0.95]          [1 5]};
+plaus_bnds = {[2 3]              [-0.2 -0.1]           [1 2]         [1 3]             [0 0]             [3 4]             [0.5 1]              [0.5 0.8]        [2 4]};
 
 
 % put parameters into attn structure
