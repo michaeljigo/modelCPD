@@ -136,7 +136,7 @@ supdrive.param_names = names;
 % attn_sup_spread    scalar of suppressive surround spread (difference-of-Gaussians only)
 
 names =      {'attn_freq_max'    'attn_freq_slope'     'attn_bw'     'attn_amp_max'   'attn_amp_slope'   'attn_spread'     'attn_baseline'      'attn_sup_amp'   'attn_sup_spread'};
-bnds =       {[1 4]              [-1 -0.1]            [1 3]         [1 20]            [0 0]             [1 5]             [0.1 1]              [0.1 0.95]          [1 5]};
+bnds =       {[1 4]              [-1 -0.1]             [1 3]         [1 8]             [0 0]             [1 5]             [0.1 1]              [0.1 0.95]       [2 6]};
 plaus_bnds = {[2 3]              [-0.2 -0.1]           [1 2]         [1 3]             [0 0]             [3 4]             [0.5 1]              [0.5 0.8]        [2 4]};
 
 
