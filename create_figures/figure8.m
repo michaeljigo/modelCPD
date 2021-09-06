@@ -1,10 +1,9 @@
 % Purpose:  Recreate Figure 8 showing fits to texture segmentation experiments.
 %
 % By:       Michael Jigo
-% Edited:   07.08.21
 
 function figure8
-addpath(genpath('../../modelCPD_v4'));
+addpath(genpath('../../modelCPD'));
 
 %% Preprocess and format data before displaying
    % visualization parameters
@@ -105,3 +104,7 @@ addpath(genpath('../../modelCPD_v4'));
             end
             title(expfiles{e},'fontname','arial','fontsize',10);
       end
+
+
+   % Save figure
+      saveas(gcf,'./figure8.pdf');

@@ -1,10 +1,9 @@
 % Purpose:  Recreate Figure 9 showing fits to acuity and texture segmentation experiments
 %
 % By:       Michael Jigo
-% Edited:   07.08.21
 
 function figure9
-addpath(genpath('../../modelCPD_v4'));
+addpath(genpath('../../modelCPD'));
 
    % display parameters
       colors = [5 113 176; 202 0 32]./255;
@@ -116,3 +115,6 @@ addpath(genpath('../../modelCPD_v4'));
                set(gca,'xlim',[0.3 16],'xtick',2.^(-1:4),'ytick',1:0.2:5,'xscale','log','yscale','linear','ylim',[0.98 1.3],'ytick',[1:0.15:2],'fontsize',6);
          end
       end
+
+   % Save figure
+      saveas(gcf,'./figure9.pdf');

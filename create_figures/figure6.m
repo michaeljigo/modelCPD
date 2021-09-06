@@ -1,10 +1,9 @@
 % Purpose:  Recreate Figure 6 showing Endogenous attention performance and statistical analyses.
 %
 % By:       Michael Jigo
-% Edited:   07.07.21
 
 function figure6
-addpath(genpath('../../modelCPD_v4'));
+addpath(genpath('../../modelCPD'));
 
 %% Preprocess and format data before displaying
    % visualization parameters
@@ -324,3 +323,7 @@ figure('name','Figure 6','position',[680 950 572 748]);
          legend(leg,freqtypes,'fontname','arial','fontsize',8,'location','southeast');
          xlabel('Eccentricity (^o)','fontname','arial','fontsize',10); 
          ylabel('Gain on target','fontname','arial','fontsize',10); 
+
+
+   % Save figure
+      saveas(gcf,'./figure6.pdf');

@@ -1,10 +1,9 @@
 % Purpose:  Recreate Figure 7 showing model comparison results of attention.
 %
 % By:       Michael Jigo
-% Edited:   07.07.21
 
 function figure7
-addpath(genpath('../../modelCPD_v4'));
+addpath(genpath('../../modelCPD'));
 
    % load bootstrap samples for all models fit to exogenous and endogenous attention experiments
       attntype = {'exo' 'endo'};
@@ -37,8 +36,8 @@ addpath(genpath('../../modelCPD_v4'));
                bic.(attntype{a}).center(n) = median(boot.(attntype{a}).(models{m}).bic.boot-boot.(attntype{a}).(bestmodel).bic.boot);
 
             % ci
-               aic.(attntype{a}).ci(:,n) = quantile(boot.(attntype{a}).(models{m}).aic.boot-boot.(attntype{a}).(bestmodel).aic.boot,[0.16 1-0.16]);
-               bic.(attntype{a}).ci(:,n) = quantile(boot.(attntype{a}).(models{m}).bic.boot-boot.(attntype{a}).(bestmodel).bic.boot,[0.16 1-0.16]);
+               aic.(attntype{a}).ci(:,n) = quantile(boot.(attntype{a}).(models{m}).aic.boot-boot.(attntype{a}).(bestmodel).aic.boot,[0.025 1-0.025]);
+               bic.(attntype{a}).ci(:,n) = quantile(boot.(attntype{a}).(models{m}).bic.boot-boot.(attntype{a}).(bestmodel).bic.boot,[0.025 1-0.025]);
          end
       end
 
@@ -76,3 +75,7 @@ addpath(genpath('../../modelCPD_v4'));
             set(gca,'ticklength',[0.025 0.05],'xtick',xval,'xticklabel',{'narrow' 'broad' 'space'},'ylim',[-2 50],'ytick',0:20:100,'xlim',[-0.25 1.2]);
             ylabel('Model performance','fontname','arial','fontsize',10);
       end
+
+
+   % Save figure
+      saveas(gcf,'./figure7.pdf');

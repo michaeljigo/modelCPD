@@ -68,9 +68,9 @@ for e = 1:numel(params.ecc)
       case 'center'
          % excitatory center modeled as a cosine function
          tmp_spread = make_cosine_fun(locus,0,attn.attn_spread*2,1);
-      %case 'center_surround' 
-         %% excitatory center with suppressive surround, modeled with the 2nd derivative of Gaussian
+      case 'center_surround2DG' % center-surround profile, defined by 2nd-derivative of Gaussian 
          %tmp_spread = gausderivative2(locus,1,attn.attn_spread,0,0); % y-position always along horizontal meridian
+         tmp_spread = gausderivative2(locus,0,attn.attn_spread,1,0); % y-position always along horizontal meridian
       case 'center_surround' 
          % excitatory center with suppressive surround, modeled as the sum of two Gaussians
          pos_amp     = 1;                                       % positive amplitude
