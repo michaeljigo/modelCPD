@@ -16,13 +16,13 @@
 % line_spacing_col   : horizontal spacing between lines (in dva)
 % targ_array_size    : [rows,columns] in the target patch
 % ori_targ           : orientation of lines in target patch
-% ori_bkgrnd         : orientation of lines in background
+% ori_bg         : orientation of lines in background
 % ori_bw             : bandwidth of oriented lines (larger bandwidth = more variable line tilts)
 % targ_ecc           : horizontal eccentricity of target patch
 % init_lines         : number of lines to initialize texture grid with (smaller numbers speed up texture generation, but must be large enough for texture size )
 %
 %
-% e.g. generate_line_texture('px_per_deg',32,'im_size',[5 5],'line_size',[0.1 0.4],'line_jitter',0,'line_spacing_row',0.68,'line_spacing_col',0.71,'targ_array_size',[3 3],'ori_targ',-45 ,'ori_bkgrnd',45,'ori_bw',0,'targ_ecc',0)
+% e.g. generate_line_texture('px_per_deg',32,'im_size',[5 5],'line_size',[0.1 0.4],'line_jitter',0,'line_spacing_row',0.68,'line_spacing_col',0.71,'targ_array_size',[3 3],'ori_targ',-45 ,'ori_bg',45,'ori_bw',0,'targ_ecc',0)
 %
 % ----------------------------------------------------------------------
 % Output(s)
@@ -45,11 +45,11 @@ in = {'px_per_deg' ...           % pixels per degree
       'line_spacing_col' ...     % spacing between columns in degrees
       'targ_array_size' ...      % [rows columns] of target array
       'ori_targ' ...             % orientation of target array
-      'ori_bkgrnd' ...           % orientation of surrounding array
+      'ori_bg' ...           % orientation of surrounding array
       'ori_bw' ...               % orientaiton bandwidth of all lines
       'targ_ecc' ...             % eccentricity, in degrees, of target patch
       'init_lines' ...           % # of lines to initiliaze the target array
-      'bkgrnd_color'};           % background color - 'white' or 'gray'
+      'bg_color'};           % background color - 'white' or 'gray'
 
 % default values
 val = {32 ...                    % px_per_deg
@@ -60,11 +60,11 @@ val = {32 ...                    % px_per_deg
       0.68 ...                   % line_spacing_col
       [3 3] ...                  % targ_array_size
       -45 ...                    % ori_targ
-      45 ...                     % ori_bkgrnd
+      45 ...                     % ori_bg
       0 ...                      % ori_bw
       0 ...                      % targ_ecc
       100 ...                    % init_lines
-      'white'};                  % bkgrnd_color                   
+      'white'};                  % bg_color                   
       
 texture_params = parseOptionalInputs(in,val,varargin);
 
@@ -167,12 +167,12 @@ for r = 1:numel(line_row_idx)
       end
 
       % now that sizes are set, rotate line before adjusting line size
-      bkgrnd_line = imrotate(tmp_line,ori(r,c),'nearest','crop');
+      bg_line = imrotate(tmp_line,ori(r,c),'nearest','crop');
       targ_line = imrotate(tmp_line,ori_targ(r,c),'nearest','crop');
 
       % adjust line size
       targ_line = targ_line(line_row_keep,line_col_keep);
-      bkgrnd_line = bkgrnd_line(line_row_keep,line_col_keep);
+      bg_line = bg_line(line_row_keep,line_col_keep);
 
       % insert target and background lines
       if targ_row(r) && targ_col(c)
@@ -188,13 +188,13 @@ for r = 1:numel(line_row_idx)
          y_size(:,2) = max([y_size(:,2); row_idx']);
       else
          tmp(:,:,1) = targ_tex(row_idx,col_idx);
-         tmp(:,:,2) = bkgrnd_line;
+         tmp(:,:,2) = bg_line;
          tmp = sum(tmp,3,'omitnan');
-         targ_tex(row_idx,col_idx) = targ_tex(row_idx,col_idx)+bkgrnd_line;
+         targ_tex(row_idx,col_idx) = targ_tex(row_idx,col_idx)+bg_line;
       end
 
       % generate no-target grid
-      notarg_tex(row_idx,col_idx) = notarg_tex(row_idx,col_idx)+bkgrnd_line; 
+      notarg_tex(row_idx,col_idx) = notarg_tex(row_idx,col_idx)+bg_line; 
    end
 end
 texture_params.targ_patch_size = [diff(x_size) diff(y_size)]./texture_params.px_per_deg;
@@ -212,36 +212,6 @@ col_px = col_px(1):col_px(2)-1;
 row_px = floor(row_px); col_px = floor(col_px);
 targ_tex = targ_tex(row_px,col_px);
 notarg_tex = notarg_tex(row_px,col_px);
-
-%% Flip colors so that background is white and lines are black
-t = targ_tex;
-switch texture_params.bkgrnd_color
-   case 'white'
-      t(t>=1-1e-3) = 1;
-      orgT = t;
-      t(orgT==1) = 0;
-      t(orgT==0) = 1;
-   case 'gray'
-      t(t>=1-1e-3) = 1;
-      t(t<=1e-3) = 0.5;
-      t(t==1) = 0;
-end
-targ_tex = t;
-
-
-n = notarg_tex;
-switch texture_params.bkgrnd_color
-   case 'white'
-      n(n>=1-1e-3) = 1;
-      orgN = n;
-      n(orgN==1) = 0;
-      n(orgN==0) = 1;
-   case 'gray'
-      n(n>=1-1e-3) = 1;
-      n(n<=1e-3) = 0.5;
-      n(n==1) = 0;
-end
-notarg_tex = n;
 return
 
 
@@ -256,7 +226,6 @@ return
 
 %%%% Helper functions
 function [line_row  line_col targ_cntr_row targ_cntr_col jitter ori ori_targ] = get_line_indices(n_lines,texture_params);
-   %%%%% NEED TO MAKE TARGET BE ABLE TO PLACED AT A GIVEN ECCENTRICITY
 
 targ_rows = texture_params.targ_array_size(1);
 if floor(targ_rows/2)*2 == targ_rows;
@@ -278,18 +247,23 @@ else
    targ_cntr_row = line_row>=min(targ_cntr_row) & line_row<=max(targ_cntr_row);
 end
 
-% COLUMNS
+% COLUMNS 
 targ_cols = texture_params.targ_array_size(2);
 if floor(targ_cols/2)*2 == targ_cols;
    % even # of target lines: center pixel will be centered between two lines
    line_col = sort([texture_params.line_spacing_col/2:texture_params.line_spacing_col:(texture_params.line_spacing_col*n_lines) -texture_params.line_spacing_col/2:-texture_params.line_spacing_col:(-texture_params.line_spacing_col*n_lines)]);
   
    % set target centers
-   [~,new_cntr] = min(abs(line_col-texture_params.targ_ecc)); % center target on desired (horizontal) eccentricity
    n_targ_per_side = targ_cols/2; % # of target elements on either side of central line
-   targ_cntr_col = n_targ_per_side*[-texture_params.line_spacing_col texture_params.line_spacing_col]+line_col(new_cntr);
+   targ_cntr_col = n_targ_per_side*[-texture_params.line_spacing_col texture_params.line_spacing_col];
    targ_cntr_col = round(targ_cntr_col.*1e6)./1e6;
-   targ_cntr_col = line_row>=min(targ_cntr_col) & line_row<=max(targ_cntr_col);
+   targ_cntr_col = line_col>=min(targ_cntr_col) & line_col<=max(targ_cntr_col);
+
+   % shift target eccentricity based on column spacing
+   numShift    = round(texture_params.targ_ecc./texture_params.line_spacing_col);
+   newCntrCol  = zeros(1,numel(targ_cntr_col));   
+   newCntrCol(find(targ_cntr_col)+numShift) = 1;
+   targ_cntr_col = newCntrCol;
 else
    % odd # of target lines: center pixel will be on a line
    line_col = -(texture_params.line_spacing_col*n_lines):texture_params.line_spacing_col:(texture_params.line_spacing_col*n_lines);
@@ -303,12 +277,13 @@ else
    targ_cntr_col = line_col>=min(targ_cntr_col) & line_col<=max(targ_cntr_col);
 end
 
+
 %% Add jitter 
 % spatial jitter
 jitter = unifrnd(-texture_params.line_jitter/2,texture_params.line_jitter/2,[numel(line_row) numel(line_col)]);
 
 % orientation jitter
-ori = texture_params.ori_bkgrnd+unifrnd(-texture_params.ori_bw/2,texture_params.ori_bw/2,[numel(line_row) numel(line_col)]);
+ori = texture_params.ori_bg+unifrnd(-texture_params.ori_bw/2,texture_params.ori_bw/2,[numel(line_row) numel(line_col)]);
 ori_targ = texture_params.ori_targ+unifrnd(-texture_params.ori_bw/2,texture_params.ori_bw/2,[numel(line_row) numel(line_col)]);
 
 
