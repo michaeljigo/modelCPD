@@ -16,7 +16,7 @@
 % line_spacing_col   : horizontal spacing between lines (in dva)
 % targ_array_size    : [rows,columns] in the target patch
 % ori_targ           : orientation of lines in target patch
-% ori_bg         : orientation of lines in background
+% ori_bg             : orientation of lines in background
 % ori_bw             : bandwidth of oriented lines (larger bandwidth = more variable line tilts)
 % targ_ecc           : horizontal eccentricity of target patch
 % init_lines         : number of lines to initialize texture grid with (smaller numbers speed up texture generation, but must be large enough for texture size )
@@ -31,7 +31,7 @@
 % texture_params     : parameters that define texture
 % ----------------------------------------------------------------------
 % Function created by Michael Jigo
-% Last update : 2020-11-05
+% Last update : 2021-10-08
 % ----------------------------------------------------------------------
 
 function [targ_tex notarg_tex texture_params] = make_texture(varargin)
@@ -45,11 +45,11 @@ in = {'px_per_deg' ...           % pixels per degree
       'line_spacing_col' ...     % spacing between columns in degrees
       'targ_array_size' ...      % [rows columns] of target array
       'ori_targ' ...             % orientation of target array
-      'ori_bg' ...           % orientation of surrounding array
+      'ori_bg' ...               % orientation of surrounding array
       'ori_bw' ...               % orientaiton bandwidth of all lines
       'targ_ecc' ...             % eccentricity, in degrees, of target patch
       'init_lines' ...           % # of lines to initiliaze the target array
-      'bg_color'};           % background color - 'white' or 'gray'
+      'bg_color'};               % background color - 'white' or 'gray'
 
 % default values
 val = {32 ...                    % px_per_deg
@@ -235,6 +235,7 @@ if floor(targ_rows/2)*2 == targ_rows;
    % set target centers
    n_targ_per_side = targ_rows/2;
    targ_cntr_row = n_targ_per_side*[-texture_params.line_spacing_row texture_params.line_spacing_row];
+   targ_cntr_row = round(targ_cntr_row*1e3)./1e3;
    targ_cntr_row = line_row>=min(targ_cntr_row) & line_row<=max(targ_cntr_row);
 else
    % odd # of target lines: center pixel will be on a line
@@ -244,6 +245,7 @@ else
    % set target centers
    n_targ_per_side = (targ_rows-1)/2;
    targ_cntr_row = n_targ_per_side*[-texture_params.line_spacing_row texture_params.line_spacing_row];
+   targ_cntr_row = round(targ_cntr_row*1e3)./1e3;
    targ_cntr_row = line_row>=min(targ_cntr_row) & line_row<=max(targ_cntr_row);
 end
 
@@ -256,7 +258,7 @@ if floor(targ_cols/2)*2 == targ_cols;
    % set target centers
    n_targ_per_side = targ_cols/2; % # of target elements on either side of central line
    targ_cntr_col = n_targ_per_side*[-texture_params.line_spacing_col texture_params.line_spacing_col];
-   targ_cntr_col = round(targ_cntr_col.*1e6)./1e6;
+   targ_cntr_col = round(targ_cntr_col.*1e3)./1e3;
    targ_cntr_col = line_col>=min(targ_cntr_col) & line_col<=max(targ_cntr_col);
 
    % shift target eccentricity based on column spacing
@@ -273,7 +275,7 @@ else
    [~,new_cntr] = min(abs(line_col-texture_params.targ_ecc)); % center target on desired (horizontal) eccentricity
    n_targ_per_side = (targ_cols-1)/2; % compute # of target elements on either side of central line
    targ_cntr_col = n_targ_per_side*[-texture_params.line_spacing_col texture_params.line_spacing_col]+line_col(new_cntr);
-   targ_cntr_col = round(targ_cntr_col.*1e6)./1e6;
+   targ_cntr_col = round(targ_cntr_col.*1e3)./1e3;
    targ_cntr_col = line_col>=min(targ_cntr_col) & line_col<=max(targ_cntr_col);
 end
 
