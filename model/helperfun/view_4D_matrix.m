@@ -58,6 +58,7 @@ for y = show_y_idx
    for x = show_x_idx
       subplot(numel(show_y_idx),numel(show_x_idx),plotn);
       imagesc(squeeze(mat(x,y,:,:))); colormap(disp_params.colormap); 
+      %contour(squeeze(mat(x,y,:,:))); colormap(disp_params.colormap); 
       set(gca,'xtick','','ytick','','box','off','PlotBoxAspectRatio',[1 0.75 0.75]);
       plotn = plotn+1;
      
@@ -71,17 +72,17 @@ for y = show_y_idx
       if y==show_y_idx(end) && x_labels
          % add titles for top-most subplots
          if ~ischar(disp_params.x_labels{x})
-            xlabel(sprintf('%.2f',str2num(disp_params.x_labels{x})),'fontname','arial','fontsize',14,'color',[0 0 0]);
+            xlabel(sprintf('%.2f',str2num(disp_params.x_labels{x})),'fontname','arial','fontsize',10,'color',[0 0 0]);
          else
-            xlabel(disp_params.x_labels{x},'fontname','arial','fontsize',14,'color',[0 0 0]);
+            xlabel(disp_params.x_labels{x},'fontname','arial','fontsize',10,'color',[0 0 0]);
          end
       end
       if x==1 && y_labels
          % add titles for left-most subplots
          if ~ischar(disp_params.y_labels{x})
-            ylabel(sprintf('%.2f',str2num(disp_params.y_labels{y})),'fontname','arial','fontsize',14,'color',[0 0 0]);
+            ylabel(sprintf('%.2f',str2num(disp_params.y_labels{y})),'fontname','arial','fontsize',10,'color',[0 0 0]);
          else
-            ylabel(disp_params.y_labels{y},'fontname','arial','fontsize',14,'color',[0 0 0]);
+            ylabel(disp_params.y_labels{y},'fontname','arial','fontsize',10,'color',[0 0 0]);
          end
       end 
    end

@@ -91,11 +91,12 @@ return
       energy_contrast_gain = supdrive.contrast_gain.^2; % adjust overall sensitivity
       popresp = exc_energy./(energy_contrast_gain+inh_energy);
       
+      %% Spatial pooling
+      popresp = pool_space(popresp,supdrive,0);
+
       %% Attention modulation on the population response
       popresp = attn.*popresp;
 
-      %% Spatial pooling
-      popresp = pool_space(popresp,supdrive,0);
    return
    
    function popresp = contrast_gain(energy,stimdrive,supdrive,attn)
